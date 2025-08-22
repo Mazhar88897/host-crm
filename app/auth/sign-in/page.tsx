@@ -47,6 +47,11 @@ export default function SignInPage() {
       sessionStorage.setItem('customPermissions', JSON.stringify(response.data.user.custom_permissions))
       sessionStorage.setItem('userSettings', JSON.stringify(response.data.user.settings))
       sessionStorage.setItem("tenantSecretKey", tenantSecretCode)
+
+      if(response.status === 200 ){
+        
+        router.push('/flow/setup')
+      }
       // Fetch user permissions
       try {
         const userID = sessionStorage.getItem('userID')
@@ -63,21 +68,20 @@ export default function SignInPage() {
         const adminPermissions = permissionsData.user_role?.permissions || null
         sessionStorage.setItem('adminPermissions', JSON.stringify(adminPermissions))
         
-        // Store user role data
+        // Store user role datapush
         
         sessionStorage.setItem("tenantSecretKey", tenantSecretCode)
         
         console.log('Permissions fetched and stored successfully')
+        
+
       } catch (permissionError: any) {
         console.error('Failed to fetch permissions:', permissionError)
         // Store null values if permissions fetch fails
        
     
       }
-      if(response.status === 200 ){
-        
-        router.push('/flow/setup')
-      }
+     
       
       // You can handle storing tokens or redirecting here
     } catch (error: any) {
@@ -204,7 +208,7 @@ export default function SignInPage() {
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-medium py-3 rounded-md transition-all duration-200 transform hover:scale-[1.02]"
-              onClick={() => router.push('/flow/chats')}
+              // onClick={() => router.push('/flow/chats')}
             >
               Log In
             </Button>
