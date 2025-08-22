@@ -133,7 +133,7 @@ export default function VectorDatabaseConfigPage() {
           setLoading(true)
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/pinecone-config/${tenantId}`, {
             headers: {
-              'ngrok-skip-browser-warning': '69420'
+              
             }
           })
           
@@ -190,7 +190,7 @@ export default function VectorDatabaseConfigPage() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/pinecone-config/${tenantId}/status`, {
         headers: {
-        'ngrok-skip-browser-warning': '69420'
+        
         }
       })
       

@@ -103,7 +103,7 @@ export default function KnowledgePage() {
       }
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/?${params}`, {
-        headers: { 'ngrok-skip-browser-warning': '69420' }
+        headers: {  }
       })
       if (!response.ok) throw new Error('Failed to fetch documents')
       
@@ -121,7 +121,7 @@ export default function KnowledgePage() {
   const fetchStats = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/stats?tenant_id=${getSessionStorage("tenantId")}`, {
-        headers: { 'ngrok-skip-browser-warning': '69420' }
+        headers: {  }
       })
       if (!response.ok) throw new Error('Failed to fetch stats')
       
@@ -138,7 +138,7 @@ export default function KnowledgePage() {
     try {
       const tenantId = getSessionStorage("tenantId", "1")
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/tenant/${tenantId}/embedding-credentials`, {
-        headers: { 'ngrok-skip-browser-warning': '69420' }
+        headers: {  }
       })
       if (!response.ok) return
       const data = await response.json()
@@ -170,7 +170,7 @@ export default function KnowledgePage() {
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/upload`, {
         method: 'POST',
-        headers: { 'ngrok-skip-browser-warning': '69420' },
+        headers: {  },
         body: formData
       })
 
@@ -199,8 +199,7 @@ export default function KnowledgePage() {
               const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/tenant/${getSessionStorage("tenantId")}/document/ ${selectedDocument.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(editForm)
       })
@@ -227,7 +226,7 @@ export default function KnowledgePage() {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/${documentId}`, {
         method: 'DELETE',
-        headers: { 'ngrok-skip-browser-warning': '69420' }
+        headers: {  }
       })
 
       if (!response.ok) throw new Error('Failed to delete document')
@@ -250,7 +249,7 @@ export default function KnowledgePage() {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/tenant/${getSessionStorage("tenantId")}/provider/${providerName}/reset?confirm=true`, {
         method: 'DELETE',
-        headers: { 'ngrok-skip-browser-warning': '69420' }
+        headers: {  }
       })
 
       if (!response.ok) throw new Error('Failed to reset provider')

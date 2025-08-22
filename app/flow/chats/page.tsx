@@ -120,7 +120,7 @@ export default function ChatsPage() {
             limit: 50,
             offset: 0,
           },
-          headers: { 'ngrok-skip-browser-warning': '69420' },
+          headers: { },
         })
 
         const data = response?.data
@@ -394,7 +394,7 @@ export default function ChatsPage() {
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
       if (!baseUrl) throw new Error('Missing NEXT_PUBLIC_API_BASE_URL')
       const response = await axios.get(`${baseUrl}/conversations/${conversationId}`, {
-        headers: { 'ngrok-skip-browser-warning': '69420' },
+        headers: { },
       })
               const data = response?.data
         console.log('data', data)
@@ -470,8 +470,7 @@ export default function ChatsPage() {
           is_ai_enabled: value
         }, {
         headers: { 
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420' 
+          'Content-Type': 'application/json'
         }
       })
       
@@ -518,11 +517,11 @@ export default function ChatsPage() {
     const deptParams = new URLSearchParams({
       tenant_id: getSessionStorage('tenantId'),
       department_id: getSessionStorage('departmentId'),
-      'ngrok-skip-browser-warning': 'true'
+   
     })
     const tenantParams = new URLSearchParams({
       tenant_id: getSessionStorage('tenantId'),
-      'ngrok-skip-browser-warning': 'true'
+      
     })
 
     const onOpen = () => setWsOpenCount(n => n + 1)

@@ -88,7 +88,7 @@ export default function AgentRolePage() {
     try {
       const response = await fetch(`${getBaseUrl()}/role/`, {
         headers: {
-          'ngrok-skip-browser-warning': '69420'
+          
         }
       })
       if (response.ok) {
@@ -117,7 +117,7 @@ export default function AgentRolePage() {
       
       const response = await fetch(url, {
         headers: {
-          'ngrok-skip-browser-warning': '69420'
+          
         }
       })
       if (response.ok) {
@@ -149,7 +149,7 @@ export default function AgentRolePage() {
       
       const response = await fetch(url, {
         headers: {
-          'ngrok-skip-browser-warning': '69420'
+          
         }
       })
       if (response.ok) {
@@ -242,8 +242,7 @@ export default function AgentRolePage() {
       const response = await fetch(`${getBaseUrl()}/user/signup`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
       })
@@ -291,8 +290,7 @@ export default function AgentRolePage() {
       const response = await fetch(`${getBaseUrl()}/user/${editingUser.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
       })
@@ -318,8 +316,7 @@ export default function AgentRolePage() {
       const response = await fetch(`${getBaseUrl()}/user/${userId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(updateData)
       })
@@ -345,7 +342,7 @@ export default function AgentRolePage() {
         const response = await fetch(`${getBaseUrl()}/user/${userId}`, {
         method: 'DELETE',
         headers: {
-          'ngrok-skip-browser-warning': '69420'
+          
         }
       })
 

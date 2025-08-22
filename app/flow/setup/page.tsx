@@ -124,7 +124,7 @@ export default function SetupPage() {
       const response = await axios.get<ListResponse>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/platform-config`, {
         params: { tenant_id: getSessionStorage('tenantId') },
         headers: {
-         'ngrok-skip-browser-warning': '69420'  
+           
         }   
       })
       setConfigs(response.data.platforms || [])

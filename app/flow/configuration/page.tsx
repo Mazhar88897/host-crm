@@ -78,7 +78,7 @@ export default function ConfigurationPage() {
       const response = await fetch(`${baseUrl}/ai-config/tenant/${tenantId}/llm-credentials`, {
         headers: {
           'accept': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+         
         }
       })
 
@@ -106,8 +106,7 @@ export default function ConfigurationPage() {
       const baseUrl = getBaseUrl()
       const response = await fetch(`${baseUrl}/ai-config/tenant/${tenantId}/embedding-credentials`, {
         headers: {
-          'accept': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'accept': 'application/json'
         }
       })
 
@@ -164,8 +163,7 @@ export default function ConfigurationPage() {
       const response = await fetch(`${baseUrl}/ai-config/llm/${llmCredentials.config_id}/${endpoint}?skip_validation=false`, {
         method: 'PUT',
         headers: {
-          'accept': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'accept': 'application/json'
         }
       })
 
@@ -195,8 +193,7 @@ export default function ConfigurationPage() {
       const response = await fetch(`${baseUrl}/ai-config/llm/${llmCredentials.config_id}`, {
         method: 'DELETE',
         headers: {
-          'accept': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'accept': 'application/json'
         }
       })
 
@@ -223,8 +220,7 @@ export default function ConfigurationPage() {
       const response = await fetch(`${baseUrl}/ai-config/embedding/${embeddingCredentials.config_id}/${endpoint}?skip_validation=false`, {
         method: 'PUT',
         headers: {
-          'accept': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'accept': 'application/json'
         }
       })
 
@@ -254,8 +250,7 @@ export default function ConfigurationPage() {
       const response = await fetch(`${baseUrl}/ai-config/embedding/${embeddingCredentials.config_id}`, {
         method: 'DELETE',
         headers: {
-          'accept': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'accept': 'application/json'
         }
       })
 

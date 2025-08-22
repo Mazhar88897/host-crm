@@ -94,7 +94,7 @@ export default function AllSettingsPage() {
       for (const url of candidateUrls) {
         try {
           const response = await axios.get(url, {
-            headers: { accept: "application/json", "ngrok-skip-browser-warning": "69420" },
+            headers: { accept: "application/json" },
             timeout: 10000,
           })
           const data = response?.data
@@ -153,8 +153,7 @@ export default function AllSettingsPage() {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/api-keys/${getSessionStorage('tenantId')}`, {
           method: 'GET',
           headers: {
-            'accept': 'application/json',
-            'ngrok-skip-browser-warning': '69420'
+            'accept': 'application/json'
           },
         })
 
@@ -226,8 +225,7 @@ export default function AllSettingsPage() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/api-keys`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           model_id: parseInt(apiKeyFormData.model_id),
@@ -288,8 +286,7 @@ export default function AllSettingsPage() {
       const existingApiKeysResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/api-keys/${tenantId}`, {
         method: 'GET',
         headers: {
-          'accept': 'application/json',
-          'ngrok-skip-browser-warning': '69420'
+          'accept': 'application/json'
         },
       })
 
@@ -302,7 +299,7 @@ export default function AllSettingsPage() {
           const deleteResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/api-keys/${existingApiKey.id}`, {
             method: 'DELETE',
             headers: {
-              'ngrok-skip-browser-warning': '69420'
+           
             },
           })
 

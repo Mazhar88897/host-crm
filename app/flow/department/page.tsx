@@ -100,7 +100,7 @@ export default function DepartmentPage() {
           limit: 100
         },
         headers: {
-          'ngrok-skip-browser-warning': '69420'
+          
         }
       })
       
