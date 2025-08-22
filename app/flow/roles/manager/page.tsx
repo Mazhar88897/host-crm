@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
-import { Plus, Edit, Trash2, UserPlus, Search, AlertCircle, RefreshCw } from "lucide-react"
+import { Plus, Edit, Trash2, UserPlus, Search, AlertCircle, RefreshCw, Building2, Shield, Check, Copy } from "lucide-react"
 
 // Helper function to safely access sessionStorage
 const getSessionStorage = (key: string, defaultValue: string = '') => {
@@ -84,7 +84,7 @@ export default function ManagerRolePage() {
   }
 
   // Fetch roles
-  const fetchRoles = async () => {
+  const fetchRoles = useCallback(async () => {
     try {
       const response = await fetch(`${getBaseUrl()}/role/`, {
         headers: {
@@ -99,10 +99,10 @@ export default function ManagerRolePage() {
       console.error('Error fetching roles:', error)
       toast.error('Failed to fetch roles')
     }
-  }
+  }, [getBaseUrl])
 
   // Fetch managers only
-  const fetchManagers = async () => {
+  const fetchManagers = useCallback(async () => {
     if (!tenantId) {
       console.error('❌ Cannot fetch managers: No tenant ID available')
       toast.error('No tenant ID found. Please sign in again.')
@@ -136,10 +136,10 @@ export default function ManagerRolePage() {
     } finally {
       setUserLoading(false)
     }
-  }
+  }, [tenantId, getBaseUrl])
 
   // Fetch departments
-  const fetchDepartments = async () => {
+  const fetchDepartments = useCallback(async () => {
     if (!tenantId) return
     
     console.log('Fetching departments with tenant ID:', tenantId)
@@ -162,7 +162,7 @@ export default function ManagerRolePage() {
     } catch (error) {
       console.error('Error fetching departments:', error)
     }
-  }
+  }, [tenantId, getBaseUrl])
 
   // Copy tenant secret to clipboard
   const copyTenantSecret = async () => {
@@ -461,14 +461,19 @@ export default function ManagerRolePage() {
   }, [])
 
   useEffect(() => {
-    fetchRoles()
-    if (tenantId) {
-      console.log('Fetching data for tenant ID:', tenantId)
+    if (tenantId && tenantSecretKey) {
       fetchManagers()
       fetchDepartments()
+      fetchRoles()
     }
-    setLoading(false)
-  }, [tenantId])
+  }, [tenantId, tenantSecretKey, fetchManagers, fetchDepartments, fetchRoles])
+
+  // Set loading to false when data is fetched
+  useEffect(() => {
+    if (tenantId && tenantSecretKey) {
+      setLoading(false)
+    }
+  }, [tenantId, tenantSecretKey])
 
   if (loading) {
     return (
