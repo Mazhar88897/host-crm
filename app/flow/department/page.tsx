@@ -9,6 +9,14 @@ import { Badge } from '@/components/ui/badge'
 import { Plus, Edit, Trash2, Building2, Search, AlertCircle } from 'lucide-react'
 import axios from 'axios'
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
 interface Department {
   id: number
   name: string
@@ -36,7 +44,7 @@ export default function DepartmentPage() {
   useEffect(() => {
     // Get tenant ID from session storage on client side
     const getTenantID = () => {
-      const storedTenantID = sessionStorage.getItem('tenantID') || sessionStorage.getItem('tenantId')
+      const storedTenantID = getSessionStorage('tenantID') || getSessionStorage('tenantId')
       if (storedTenantID) {
         setTenantID(storedTenantID)
         return true
@@ -87,7 +95,7 @@ export default function DepartmentPage() {
       
       const response = await axios.get(`${apiBaseUrl}/department`, {
         params: {
-          tenant_id: sessionStorage.getItem('tenantId'),
+          tenant_id: getSessionStorage('tenantId'),
           skip: 0,
           limit: 100
         },
@@ -185,7 +193,7 @@ export default function DepartmentPage() {
           {
             name: formData.name,
             department_number: formData.department_number,
-            tenant_id: sessionStorage.getItem('tenantId')
+            tenant_id: getSessionStorage('tenantId')
           }
         )
       } else {
@@ -193,7 +201,7 @@ export default function DepartmentPage() {
         await axios.post(`${apiBaseUrl}/department`, {
           name: formData.name,
           department_number: formData.department_number,
-          tenant_id: sessionStorage.getItem('tenantId')
+          tenant_id: getSessionStorage('tenantId')
         })
       }
       

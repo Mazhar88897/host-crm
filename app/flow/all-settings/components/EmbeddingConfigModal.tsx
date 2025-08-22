@@ -8,6 +8,14 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
 type AiModel = {
   id: number
   name: string
@@ -40,7 +48,7 @@ export default function EmbeddingConfigModal({ isOpen, onClose, model, onSuccess
     setLoading(true)
     
     try {
-      const tenantID = sessionStorage.getItem('tenantId')
+      const tenantID = getSessionStorage('tenantId')
       
       if (!tenantID) {
         throw new Error('Tenant ID not found. Please ensure you are properly authenticated.')

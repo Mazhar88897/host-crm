@@ -17,6 +17,14 @@ interface PineconeConfig {
   updated_at: string | null
 }
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
 export default function VectorDatabaseConfigPage() {
   const [tenantId, setTenantId] = useState<number>()
   const [apiKey, setApiKey] = useState<string>('')
@@ -29,7 +37,7 @@ export default function VectorDatabaseConfigPage() {
 
   useEffect(() => {
     setIsClient(true)
-    const storedTenant = sessionStorage.getItem('tenantId')
+    const storedTenant = getSessionStorage('tenantId')
     console.log('Stored tenant from sessionStorage:', storedTenant)
     if (storedTenant) {
       setTenantId(parseInt(storedTenant))

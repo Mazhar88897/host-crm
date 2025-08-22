@@ -18,6 +18,14 @@ import {
   Bot
 } from 'lucide-react'
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
 interface RoleCard {
   title: string
   description: string
@@ -32,7 +40,7 @@ const RolesPage = () => {
 
   useEffect(() => {
     // Get user role from session storage
-    const role = sessionStorage.getItem('userRole')
+    const role = getSessionStorage('userRole')
     if (role) {
       setUserRole(role)
     }

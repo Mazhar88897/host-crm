@@ -12,6 +12,14 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
 interface Document {
   id: number
   document_name: string
@@ -66,7 +74,7 @@ export default function KnowledgePage() {
   const [uploadForm, setUploadForm] = useState({
     file: null as File | null,
     document_name: "",
-    tenant_id: parseInt(sessionStorage.getItem("tenantId") || "1"), // Default tenant ID - you might want to get this from context
+    tenant_id: parseInt(getSessionStorage("tenantId", "1")), // Default tenant ID - you might want to get this from context
     embedding_config_id: 1 // Default embedding config ID
   })
 
@@ -84,7 +92,7 @@ export default function KnowledgePage() {
     try {
       setLoading(true)
       const params = new URLSearchParams({
-        tenant_id: sessionStorage.getItem("tenantId") || "1",
+        tenant_id: getSessionStorage("tenantId", "1"),
         // page: currentPage.toString(),
         // page_size: pageSize.toString(),
         // enabled_only: showEnabledOnly.toString()
@@ -112,7 +120,7 @@ export default function KnowledgePage() {
   // Fetch stats
   const fetchStats = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/stats?tenant_id=${sessionStorage.getItem("tenantId")}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/stats?tenant_id=${getSessionStorage("tenantId")}`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
       })
       if (!response.ok) throw new Error('Failed to fetch stats')
@@ -128,7 +136,7 @@ export default function KnowledgePage() {
   // Prefill embedding_config_id from tenant embedding credentials
   const prefillEmbeddingConfigId = async () => {
     try {
-      const tenantId = sessionStorage.getItem("tenantId") || "1"
+      const tenantId = getSessionStorage("tenantId", "1")
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/tenant/${tenantId}/embedding-credentials`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
       })
@@ -188,7 +196,7 @@ export default function KnowledgePage() {
     if (!selectedDocument) return
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/tenant/${sessionStorage.getItem("tenantId")}/document/ ${selectedDocument.id}`, {
+              const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/tenant/${getSessionStorage("tenantId")}/document/ ${selectedDocument.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -240,7 +248,7 @@ export default function KnowledgePage() {
     }
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/tenant/${sessionStorage.getItem("tenantId")}/provider/${providerName}/reset?confirm=true`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/knowledge-base/tenant/${getSessionStorage("tenantId")}/provider/${providerName}/reset?confirm=true`, {
         method: 'DELETE',
         headers: { 'ngrok-skip-browser-warning': '69420' }
       })

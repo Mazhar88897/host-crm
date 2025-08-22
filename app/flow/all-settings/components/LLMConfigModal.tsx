@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -23,6 +23,14 @@ interface LLMConfigModalProps {
   onSuccess: () => void
 }
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
 export default function LLMConfigModal({ isOpen, onClose, model, onSuccess }: LLMConfigModalProps) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -37,7 +45,7 @@ export default function LLMConfigModal({ isOpen, onClose, model, onSuccess }: LL
     setLoading(true)
     
     try {
-      const tenantID = sessionStorage.getItem('tenantId')
+      const tenantID = getSessionStorage('tenantId')
       
       if (!tenantID) {
         throw new Error('Tenant ID not found. Please ensure you are properly authenticated.')

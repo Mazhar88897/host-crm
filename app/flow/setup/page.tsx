@@ -36,6 +36,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
 // Schema for platform configuration
 const platformConfigSchema = z.object({
   config: z.object({
@@ -114,7 +122,7 @@ export default function SetupPage() {
     try {
       setLoading(true)
       const response = await axios.get<ListResponse>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/platform-config`, {
-        params: { tenant_id: sessionStorage.getItem('tenantId') },
+        params: { tenant_id: getSessionStorage('tenantId') },
         headers: {
          'ngrok-skip-browser-warning': '69420'  
         }   
@@ -139,8 +147,8 @@ export default function SetupPage() {
     try {
       const payload = {
         ...data,
-        department_id: sessionStorage.getItem('departmentId'),
-        tenant_id: sessionStorage.getItem('tenantId'),
+        department_id: getSessionStorage('departmentId'),
+        tenant_id: getSessionStorage('tenantId'),
       }
       await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/platform-config`, payload)
       toast.success('Platform configuration created successfully')
@@ -159,8 +167,8 @@ export default function SetupPage() {
       // Add system-managed fields
       const payload = {
         ...data,
-        department_id: sessionStorage.getItem('departmentId'),
-        tenant_id: sessionStorage.getItem('tenantId'),
+        department_id: getSessionStorage('departmentId'),
+        tenant_id: getSessionStorage('tenantId'),
       }
       
       if (editingConfig) {
@@ -196,7 +204,7 @@ export default function SetupPage() {
   const confirmDelete = async () => {
     try {
       await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/platform-config/${platformToDelete}`, {
-        params: { tenant_id: sessionStorage.getItem('tenantId'), department_id: sessionStorage.getItem('departmentId') }
+        params: { tenant_id: getSessionStorage('tenantId'), department_id: getSessionStorage('departmentId') }
       })
       toast.success('Platform configuration deleted successfully')
       fetchConfigs()

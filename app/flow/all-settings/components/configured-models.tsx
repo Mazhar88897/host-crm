@@ -9,6 +9,14 @@ import { Switch } from '@/components/ui/switch';
 import { Loader2, RefreshCw, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
 interface Model {
   id: number;
   name: string;
@@ -57,7 +65,7 @@ export default function ConfiguredModels() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/tenant/${sessionStorage.getItem('tenantId')}/llm-configs`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/tenant/${getSessionStorage('tenantId')}/llm-configs`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -74,7 +82,7 @@ export default function ConfiguredModels() {
     setEmbeddingLoading(true);
     setEmbeddingError(null);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/tenant/${sessionStorage.getItem('tenantId')}/embedding-configs`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/tenant/${getSessionStorage('tenantId')}/embedding-configs`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

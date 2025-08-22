@@ -6,6 +6,20 @@ import { Switch } from '@/components/ui/switch'
 import axios from "axios"
 import { toast } from "sonner"
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
+const setSessionStorage = (key: string, value: string) => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    sessionStorage.setItem(key, value)
+  }
+}
+
 const mockChats = [
   {
     id: 1,
@@ -75,8 +89,8 @@ export default function ChatsPage() {
 
   useEffect(() => {
     // Get user role and department info
-    const role = sessionStorage.getItem('userRole') || ''
-    const deptId = sessionStorage.getItem('departmentId') || ''
+    const role = getSessionStorage('userRole', '')
+    const deptId = getSessionStorage('departmentId', '')
     setUserRole(role)
     
     // Set department filter based on user role
@@ -91,8 +105,8 @@ export default function ChatsPage() {
         setLoading(true)
         setError(null)
 
-        const tenantID = sessionStorage.getItem('tenantID')
-        const departmentID = sessionStorage.getItem('departmentID')
+        const tenantID = getSessionStorage('tenantID')
+        const departmentID = getSessionStorage('departmentID')
 
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
         if (!baseUrl) {
@@ -101,8 +115,8 @@ export default function ChatsPage() {
 
         const response = await axios.get(`${baseUrl}/inbox`, {
           params: {
-            tenant_id: sessionStorage.getItem('tenantId'),
-            // department_id: sessionStorage.getItem('departmentId'),
+            tenant_id: getSessionStorage('tenantId'),
+            // department_id: getSessionStorage('departmentId'),
             limit: 50,
             offset: 0,
           },
@@ -361,7 +375,7 @@ export default function ChatsPage() {
   }
 
   const parseSessionNumber = (key: string): number | null => {
-    const raw = sessionStorage.getItem(key)
+    const raw = getSessionStorage(key)
     if (!raw) return null
     try {
       const parsed = JSON.parse(raw)
@@ -388,7 +402,7 @@ export default function ChatsPage() {
         // Store AI status per conversation
         if (data?.conversation?.is_ai_enabled !== undefined) {
           const key = `aiEnabled:${conversationId}`
-          sessionStorage.setItem(key, JSON.stringify(data.conversation.is_ai_enabled))
+          setSessionStorage(key, JSON.stringify(data.conversation.is_ai_enabled))
           
           // Update local state if this is the currently selected conversation
           if (selectedChatId === conversationId) {
@@ -441,7 +455,7 @@ export default function ChatsPage() {
   useEffect(() => {
     if (selectedChatId == null) return
     const key = `aiEnabled:${selectedChatId}`
-    const stored = sessionStorage.getItem(key)
+    const stored = getSessionStorage(key)
     setAiEnabled(stored === 'true')
   }, [selectedChatId])
 
@@ -464,7 +478,7 @@ export default function ChatsPage() {
       // Update local state and session storage after successful API call
       setAiEnabled(value)
       const key = `aiEnabled:${selectedChatId}`
-      sessionStorage.setItem(key, String(value))
+      setSessionStorage(key, String(value))
       
       // Add system message to show AI status change
       const sysMsg = {
@@ -502,12 +516,12 @@ export default function ChatsPage() {
     if (!baseUrl) return
     const wsBase = baseUrl.replace(/^http/, 'ws').replace(/\/+$/, '')
     const deptParams = new URLSearchParams({
-      tenant_id: sessionStorage.getItem('tenantId') || '',
-      department_id: sessionStorage.getItem('departmentId') || '',
+      tenant_id: getSessionStorage('tenantId'),
+      department_id: getSessionStorage('departmentId'),
       'ngrok-skip-browser-warning': 'true'
     })
     const tenantParams = new URLSearchParams({
-      tenant_id: sessionStorage.getItem('tenantId') || '',
+      tenant_id: getSessionStorage('tenantId'),
       'ngrok-skip-browser-warning': 'true'
     })
 
@@ -543,7 +557,7 @@ export default function ChatsPage() {
         // refetch inbox
         try {
           const response = await axios.get(`${baseUrl}/inbox`, {
-            params: { tenant_id: sessionStorage.getItem('tenantId'), department_id: sessionStorage.getItem('departmentId'), limit: 50, offset: 0 },
+            params: { tenant_id: getSessionStorage('tenantId'), department_id: getSessionStorage('departmentId'), limit: 50, offset: 0 },
             headers: { 'ngrok-skip-browser-warning': '69420' },
           })
           const data = response?.data
@@ -566,7 +580,7 @@ export default function ChatsPage() {
         if (!ok) {
           try {
             const response = await axios.get(`${baseUrl}/inbox`, {
-              params: { tenant_id: sessionStorage.getItem('tenantId'), department_id: sessionStorage.getItem('departmentId'), limit: 50, offset: 0 },
+              params: { tenant_id: getSessionStorage('tenantId'), department_id: getSessionStorage('departmentId'), limit: 50, offset: 0 },
               headers: { 'ngrok-skip-browser-warning': '69420' },
             })
             const data = response?.data
@@ -608,7 +622,7 @@ export default function ChatsPage() {
           const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
           if (!baseUrl) return
           const response = await axios.get(`${baseUrl}/inbox`, {
-            params: { tenant_id: sessionStorage.getItem('tenantId'), department_id: sessionStorage.getItem('departmentId'), limit: 50, offset: 0 },
+            params: { tenant_id: getSessionStorage('tenantId'), department_id: getSessionStorage('departmentId'), limit: 50, offset: 0 },
             headers: { 'ngrok-skip-browser-warning': '69420' },
           })
           const data = response?.data
@@ -632,7 +646,7 @@ export default function ChatsPage() {
   useEffect(() => {
     if (selectedChatId) {
       const key = `aiEnabled:${selectedChatId}`
-      const stored = sessionStorage.getItem(key)
+      const stored = getSessionStorage(key)
       if (stored !== null) {
         setAiEnabled(JSON.parse(stored))
       } else {
@@ -756,10 +770,10 @@ export default function ChatsPage() {
         conversation_id: selectedChat.id,
         // conversation_id: 5,
         // department_id:   departmentId,
-        department_id: sessionStorage.getItem('departmentId'),
+        department_id: getSessionStorage('departmentId'),
         sender_type: 'agent',
-        sender_user_id: sessionStorage.getItem('userID'),
-        tenant_id: sessionStorage.getItem('tenantId'),
+        sender_user_id: getSessionStorage('userID'),
+        tenant_id: getSessionStorage('tenantId'),
         text: input,
       }, { headers: { 'ngrok-skip-browser-warning': '69420' } })
 
@@ -815,10 +829,10 @@ export default function ChatsPage() {
       const formData = new FormData()
       formData.append('file', selectedFile)
       formData.append('conversation_id', selectedChat.id.toString())
-      formData.append('tenant_id', sessionStorage.getItem('tenantId') || '')
-      formData.append('department_id', sessionStorage.getItem('departmentId') || '')
+      formData.append('tenant_id', getSessionStorage('tenantId'))
+      formData.append('department_id', getSessionStorage('departmentId'))
       formData.append('caption', attachmentCaption)
-      formData.append('sender_user_id', sessionStorage.getItem('userID') || '')
+      formData.append('sender_user_id', getSessionStorage('userID'))
       formData.append('sender_type', 'agent')
 
       // Optimistic update
@@ -879,10 +893,10 @@ export default function ChatsPage() {
       if (!baseUrl) throw new Error('Missing NEXT_PUBLIC_API_BASE_URL')
 
       await axios.post(`${baseUrl}/conversations/${conversationId}/join`, {
-        // tenant_id: sessionStorage.getItem('tenantId'),
-        // department_id: sessionStorage.getItem('departmentId'),
-        agent_id: sessionStorage.getItem('userID'),
-        // user_role: sessionStorage.getItem('userRole')
+        // tenant_id: getSessionStorage('tenantId'),
+        // department_id: getSessionStorage('departmentId'),
+        agent_id: getSessionStorage('userID'),
+        // user_role: getSessionStorage('userRole')
       }, { 
         headers: { 'ngrok-skip-browser-warning': '69420' } 
       })
@@ -903,10 +917,10 @@ export default function ChatsPage() {
       if (!baseUrl) throw new Error('Missing NEXT_PUBLIC_API_BASE_URL')
 
       await axios.post(`${baseUrl}/conversations/${conversationId}/leave`, {
-        // tenant_id: sessionStorage.getItem('tenantId'),
-        // department_id: sessionStorage.getItem('departmentId'),
-        agent_id: sessionStorage.getItem('userID'),
-        // user_role: sessionStorage.getItem('userRole')
+        // tenant_id: getSessionStorage('tenantId'),
+        // department_id: getSessionStorage('departmentId'),
+        agent_id: getSessionStorage('userID'),
+        // user_role: getSessionStorage('userRole')
       }, { 
         headers: { 'ngrok-skip-browser-warning': '69420' } 
       })
@@ -1020,7 +1034,7 @@ export default function ChatsPage() {
           </div>
 
           {/* Department Filter - Only for Admin/Manager */}
-          {(sessionStorage.getItem('userRole') === 'Admin' || sessionStorage.getItem('userRole') === 'Manager') && (
+          {(getSessionStorage('userRole') === 'Admin' || getSessionStorage('userRole') === 'Manager') && (
             <div className="mb-3">
               <label className="block text-xs font-medium text-gray-700 mb-1">Department</label>
               <select

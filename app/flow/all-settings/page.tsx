@@ -34,6 +34,20 @@ type AiProvider = {
   models: AiModel[]
 }
 
+// Helper function to safely access sessionStorage
+const getSessionStorage = (key: string, defaultValue: string = '') => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    return sessionStorage.getItem(key) || defaultValue
+  }
+  return defaultValue
+}
+
+const setSessionStorage = (key: string, value: string) => {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    sessionStorage.setItem(key, value)
+  }
+}
+
 export default function AllSettingsPage() {
   const [providers, setProviders] = useState<AiProvider[]>([])
   const [loading, setLoading] = useState<boolean>(false)
@@ -128,7 +142,7 @@ export default function AllSettingsPage() {
     const fetchTenantApiKeys = async () => {
       try {
         // Get tenant ID from session storage
-        const tenantId = sessionStorage.getItem('tenantId')
+        const tenantId = getSessionStorage('tenantId')
         // const tenantID = '28'
         
         if (!tenantId) {
@@ -136,7 +150,7 @@ export default function AllSettingsPage() {
           return
         }
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/api-keys/${sessionStorage.getItem('tenantId')}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/api-keys/${getSessionStorage('tenantId')}`, {
           method: 'GET',
           headers: {
             'accept': 'application/json',
@@ -151,7 +165,7 @@ export default function AllSettingsPage() {
           // Store the first API key ID in session storage
           if (data && data.length > 0) {
             const apiKeyId = data[0].id
-            sessionStorage.setItem('api_key_id', apiKeyId.toString())
+            setSessionStorage('api_key_id', apiKeyId.toString())
             console.log('Stored API key ID:', apiKeyId)
           }
         } else {
@@ -207,7 +221,7 @@ export default function AllSettingsPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      const tenantId = sessionStorage.getItem('tenantId')
+      const tenantId = getSessionStorage('tenantId')
       
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/api-keys`, {
         method: 'POST',
@@ -218,7 +232,7 @@ export default function AllSettingsPage() {
         body: JSON.stringify({
           model_id: parseInt(apiKeyFormData.model_id),
           api_key: apiKeyFormData.api_key,
-          tenant_id: sessionStorage.getItem('tenantId')
+          tenant_id: getSessionStorage('tenantId')
         })
       })
 
@@ -268,7 +282,7 @@ export default function AllSettingsPage() {
     
     setLoading(true)
     try {
-      const tenantId   = sessionStorage.getItem('tenantId')
+      const tenantId   = getSessionStorage('tenantId')
       
       // First, get the existing API key ID for this model
       const existingApiKeysResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-config/api-keys/${tenantId}`, {
